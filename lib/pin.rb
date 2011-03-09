@@ -1,7 +1,6 @@
 module Pin
   class << self.class.superclass
     def pinnable
-      self.send(:class_variable_set, :@@magic_methods, args.first)
       include PinInstanceMethods
     end
   end
@@ -13,7 +12,7 @@ module PinInstanceMethods
   end
 
   def foo
-    puts foo
+    puts "foo"
   end
 end
 
