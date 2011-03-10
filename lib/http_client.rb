@@ -21,27 +21,27 @@ class HttpClient
   # sends GET request and returns response
   def get(headers, resource, data, params)
     request = Net::HTTP::Get.new(build_uri(resource, params).request_uri, headers)
-    return @http.request(request)
+    @http.request(request)
   end
 
   # sends PUT request and returns response
   def put(headers, resource, data, params)
     request = Net::HTTP::Put.new(resource_path(resource), headers)
-    request.body = data.to_json
-    return @http.request(request)
+    request.body = params.nil? ? data.to_json : params.to_query
+    @http.request(request)
   end
 
   # sends POST request and returns response
   def post(headers, resource, data, params)
     request = Net::HTTP::Post.new(resource_path(resource), headers)
-    request.body = data.to_json
-    return @http.request(request)
+    request.body = params.nil? ? data.to_json : params.to_query
+    @http.request(request)
   end
 
   # sends DELETE request and returns response
   def delete(headers, resource, data, params)
     request = Net::HTTP::Delete.new(resource_path(resource), headers)
-    return @http.request(request)
+    @http.request(request)
   end
 
   # redefines the resource path including the namespace
