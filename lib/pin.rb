@@ -4,8 +4,9 @@
 
 module Pin
   class << self.class.superclass
-    def pinnable
+    def pinnable(*args)
       include PinInstanceMethods
+      self.kingpin_args = args
     end
   end
 end
@@ -49,20 +50,36 @@ module PinInstanceMethods
     Pincaster.nearby(self, radius, rad=true)
   end
 
-  # returns objects longitude
+  # returns objects longitude depending on configured method name for access as well as DEG or RAD configuration
   def pin_lng
-    [:longitude, :long, :lng, :lgt, :lgdt].each do |l|
-      return self.send(l) if self.respond_to?(l)
+    if self.class.kingpin_args.nil?
+      [:longitude, :long, :lng, :lgt, :lgdt].each do |l|
+        return self.send(l) if self.respond_to?(l)
+      end
+      return nil
+    else
+      if !!self.class.kingpin_args[:methods]
+        return !!self.class.kingpin_args[:rad] ? self.send(self.class.kingpin_args[:methods][:lng]).to_f * 180.0 / Math::PI : self.send(self.class.kingpin_args[:methods][:lng])
+      else
+        return self.send(self.class.kingpin_args[:methods][:lng])
+      end
     end
-    return nil
   end
 
-  # returns objects latitude
+  # returns objects latitude depending on configured method name for access as well as DEG or RAD configuration
   def pin_lat
-    [:latitude, :lati, :ltt, :ltd, :lat].each do |l|
-      return self.send(l) if self.respond_to?(l)
+    if self.class.kingpin_args.nil?
+      [:latitude, :lati, :ltt, :ltd, :lat].each do |l|
+        return self.send(l) if self.respond_to?(l)
+      end
+      return nil
+    else
+      if !!self.class.kingpin_args[:methods]
+        return !!self.class.kingpin_args[:rad] ? self.send(self.class.kingpin_args[:methods][:lat]).to_f * 180.0 / Math::PI : self.send(self.class.kingpin_args[:methods][:lat])
+      else
+        return self.send(self.class.kingpin_args[:methods][:lat])
+      end
     end
-    return nil
   end
 
 end
@@ -72,5 +89,13 @@ end
 ###
 
 module PinClassMethods
+
+  def kingpin_args=(args)
+    @@kingpin_args = args
+  end
+
+  def kingpin_args
+    @@kingpin_args.first
+  end
 
 end

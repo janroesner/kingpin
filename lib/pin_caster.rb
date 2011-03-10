@@ -103,7 +103,7 @@ class Pincaster
                                "/api/1.0/search/#{record.class.to_s}/nearby/#{record.pin_lat.to_s},#{record.pin_lng.to_s}.json",
                                nil,
                                nil,
-                               {:radius => radius.to_s})
+                               {:radius => radius.to_s, :overflow => true})
   end
 
 end
