@@ -1,3 +1,7 @@
+###
+# Pin - makes models pinnable
+###
+
 module Pin
   class << self.class.superclass
     def pinnable
@@ -5,6 +9,10 @@ module Pin
     end
   end
 end
+
+###
+# PinInstanceMethods - provides models new instance methods
+###
 
 module PinInstanceMethods
   def self.included(base)
@@ -15,6 +23,10 @@ module PinInstanceMethods
     puts "foo"
   end
 end
+
+###
+# PinClassMethods - provides models new class methods
+###
 
 module PinClassMethods
   def bar
