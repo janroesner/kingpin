@@ -45,11 +45,6 @@ module PinInstanceMethods
     Pincaster.nearby(self, radius)
   end
 
-  # returns nearby Pincaster pins in given radius of self BUT self's lat and lng are in RAD not DEG
-  def nearby_rad(radius)
-    Pincaster.nearby(self, radius, rad=true)
-  end
-
   # returns objects longitude depending on configured method name for access as well as DEG or RAD configuration
   def pin_lng
     if self.class.kingpin_args.nil?

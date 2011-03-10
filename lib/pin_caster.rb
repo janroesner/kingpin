@@ -65,19 +65,6 @@ class Pincaster
                                {:_loc => "#{record.pin_lat},#{record.pin_lng}"}).code == "200" ? true : false
   end
 
-  # adds a new record as well as creates a layer for it if the latter does not exist already BUT lng and lat are given in RAD not DEG
-  def self.add_record_rad(record)
-    raise "Can't add a record without geocoordinates lng, lat" if record.pin_lng.nil? or record.pin_lat.nil?
-    @@rr = record.clone
-    def record.pin_lat
-      @@rr.pin_lat.to_f * 180.0 / Math::PI
-    end
-    def record.pin_lng
-      @@rr.pin_lng.to_f * 180.0 / Math::PI
-    end
-    self.add_record(record)
-  end
-
   # returns a pin object for the given ActiveRecord object
   def self.get_record(record)
     PincasterPin.new(JSON.parse(@@http_client.send_request('GET', "/api/1.0/records/#{record.class.to_s}/#{record.id}.json").body)) rescue nil
@@ -88,17 +75,8 @@ class Pincaster
     @@http_client.send_request('DELETE', "/api/1.0/records/#{record.class.to_s}/#{record.id}.json").code == "200" ? true : false
   end
 
-  def self.nearby(record, radius, rad=nil)
+  def self.nearby(record, radius, limit=200)
     raise "Given #{record.class.to_s} has not lng or lat." if record.pin_lng.nil? or record.pin_lat.nil?
-    if !!rad
-      @@rr = record.clone
-      def record.pin_lat
-        @@rr.pin_lat.to_f * 180.0 / Math::PI
-      end
-      def record.pin_lng
-        @@rr.pin_lng.to_f * 180.0 / Math::PI
-      end
-    end
     @@http_client.send_request('GET',
                                "/api/1.0/search/#{record.class.to_s}/nearby/#{record.pin_lat.to_s},#{record.pin_lng.to_s}.json",
                                nil,
