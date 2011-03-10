@@ -75,13 +75,15 @@ class Pincaster
     @@http_client.send_request('DELETE', "/api/1.0/records/#{record.class.to_s}/#{record.id}.json").code == "200" ? true : false
   end
 
-  def self.nearby(record, radius, limit=200)
+  # returns all pins nearby given record, maximum radius meters away, returns limit number of pins
+  def self.nearby(record, radius, limit)
+    limit ||= 2000
     raise "Given #{record.class.to_s} has not lng or lat." if record.pin_lng.nil? or record.pin_lat.nil?
     @@http_client.send_request('GET',
                                "/api/1.0/search/#{record.class.to_s}/nearby/#{record.pin_lat.to_s},#{record.pin_lng.to_s}.json",
                                nil,
                                nil,
-                               {:radius => radius.to_s, :overflow => true})
+                               {:radius => radius.to_s, :limit => limit}).body
   end
 
 end

@@ -25,11 +25,6 @@ module PinInstanceMethods
     Pincaster.add_record(self)
   end
 
-  # add a Pincaster record for self with layer: self.class BUT self's lng and lat are in RAD not DEG
-  def add_pin_rad
-    Pincaster.add_record_rad(self)
-  end
-
   # returns the Pincaster pin for self
   def pin
     Pincaster.get_record(self)
@@ -40,9 +35,15 @@ module PinInstanceMethods
     Pincaster.delete_record(self)
   end
 
-  # returns nearby Pincaster pins in given radius of self
-  def nearby(radius)
-    Pincaster.nearby(self, radius)
+  # returns nearby found record_ids in same layer as self, radius meters away, number of results limited to limit
+  def nearby_ids(radius, limit=nil)
+    pins = Pincaster.nearby(self, radius, limit)
+    JSON.parse(pins)["matches"].map{|p| p["key"]}
+  end
+
+  # returns nearby found records in same layer as self, radius metera away, number of results limited to limit
+  def nearby(radius, limit=nil)
+    self.class.find(nearby_ids(radius, limit))
   end
 
   # returns objects longitude depending on configured method name for access as well as DEG or RAD configuration
