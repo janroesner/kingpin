@@ -8,13 +8,13 @@ module Kingpin
       include KingpinInstanceMethods
       self.kingpin_args = args
       named_scope :nearby, lambda { |point, radius| { :conditions => ["id in (?)", point.nearby_ids(radius)] } }
-      after_save :autopin if !!args.first[:autopin]
+      after_save :autopin if (!!args.first[:autopin] rescue false)
     end
   end
 end
 
 ###
-# PinInstanceMethods - provides models new instance methods
+# KingpinInstanceMethods - provides models new instance methods
 ###
 
 module KingpinInstanceMethods
@@ -49,33 +49,29 @@ module KingpinInstanceMethods
 
   # returns objects longitude depending on configured method name for access as well as DEG or RAD configuration
   def pin_lng
-    if self.class.kingpin_args.nil?
+    if not !!self.class.kingpin_args[:methods]
       [:longitude, :long, :lng, :lgt, :lgdt].each do |l|
-        return self.send(l) if self.respond_to?(l)
+        if self.respond_to?(l)
+          return !!self.class.kingpin_args[:rad] ? self.send(l).to_f * 180 / Math::PI : self.send(l)
+        end
       end
       return nil
     else
-      if !!self.class.kingpin_args[:methods]
-        return !!self.class.kingpin_args[:rad] ? self.send(self.class.kingpin_args[:methods][:lng]).to_f * 180.0 / Math::PI : self.send(self.class.kingpin_args[:methods][:lng])
-      else
-        return self.send(self.class.kingpin_args[:methods][:lng])
-      end
+      return !!self.class.kingpin_args[:rad] ? self.send(self.class.kingpin_args[:methods][:lng]).to_f * 180.0 / Math::PI : self.send(self.class.kingpin_args[:methods][:lng])
     end
   end
 
   # returns objects latitude depending on configured method name for access as well as DEG or RAD configuration
   def pin_lat
-    if self.class.kingpin_args.nil?
+    if not !!self.class.kingpin_args[:methods]
       [:latitude, :lati, :ltt, :ltd, :lat].each do |l|
-        return self.send(l) if self.respond_to?(l)
+        if self.respond_to?(l)
+          return !!self.class.kingpin_args[:rad] ? self.send(l).to_f * 180 / Math::PI : self.send(l)
+        end
       end
       return nil
     else
-      if !!self.class.kingpin_args[:methods]
-        return !!self.class.kingpin_args[:rad] ? self.send(self.class.kingpin_args[:methods][:lat]).to_f * 180.0 / Math::PI : self.send(self.class.kingpin_args[:methods][:lat])
-      else
-        return self.send(self.class.kingpin_args[:methods][:lat])
-      end
+      return !!self.class.kingpin_args[:rad] ? self.send(self.class.kingpin_args[:methods][:lat]).to_f * 180.0 / Math::PI : self.send(self.class.kingpin_args[:methods][:lat])
     end
   end
 
@@ -87,17 +83,17 @@ module KingpinInstanceMethods
 end
 
 ###
-# PinClassMethods - provides models new class methods
+# KingpinClassMethods - provides models new class methods
 ###
 
 module KingpinClassMethods
 
   def kingpin_args=(args)
-    @@kingpin_args = args
+    @@kingpin_args = args.empty? ? nil : args
   end
 
   def kingpin_args
-    @@kingpin_args.first
+    @@kingpin_args.first rescue {:methods => nil, :rad => false, :autopin => false}
   end
 
 end
