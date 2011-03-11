@@ -2,7 +2,6 @@ class HttpClient
 
   require 'net/http'
   require "cgi"
-  require "benchmark"
 
   def initialize(protocol, host, port, namespace=nil)
     @http = Net::HTTP.new(host, port)
