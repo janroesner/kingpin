@@ -7,6 +7,7 @@ module Pin
     def pinnable(*args)
       include PinInstanceMethods
       self.kingpin_args = args
+      named_scope :nearby, lambda { |point, radius| { :conditions => ["id in (?)", point.nearby_ids(radius)] } }
     end
   end
 end
