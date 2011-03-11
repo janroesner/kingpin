@@ -4,13 +4,13 @@
 # -*- encoding: utf-8 -*-
 
 Gem::Specification.new do |s|
-  s.name = %q{pincaster}
-  s.version = "0.0.0"
+  s.name = %q{kingpin}
+  s.version = "0.5.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Jan Roesner"]
-  s.date = %q{2011-03-09}
-  s.description = %q{Longer description}
+  s.date = %q{2011-03-11}
+  s.description = %q{Kingpin extends every ActiveRecord model to become a Pincaster pin automatically. Thus the model automatically creates a Pincaster pin everytime it is saved. Kingpin afterwards provides methods at class and instance level that make geolocation easy and thanks to Pincaster amazingly fast.}
   s.email = %q{jan@roesner.it}
   s.extra_rdoc_files = [
     "LICENSE.txt",
@@ -20,11 +20,16 @@ Gem::Specification.new do |s|
     ".document",
     ".rspec",
     "Gemfile",
+    "Gemfile.lock",
     "LICENSE.txt",
     "README.rdoc",
     "Rakefile",
     "VERSION",
+    "lib/http_client.rb",
+    "lib/pin_caster.rb",
     "lib/pincaster.rb",
+    "lib/pincaster_layer.rb",
+    "lib/pincaster_pin.rb",
     "spec/pincaster_spec.rb",
     "spec/spec_helper.rb"
   ]
@@ -32,7 +37,7 @@ Gem::Specification.new do |s|
   s.licenses = ["MIT"]
   s.require_paths = ["lib"]
   s.rubygems_version = %q{1.3.7}
-  s.summary = %q{Pincaster is a gem that connects your model with the Pincaster database}
+  s.summary = %q{Kingpin makes your ActiveRecord model a Pincaster pin and thus geosearcheable. Fast!}
   s.test_files = [
     "spec/pincaster_spec.rb",
     "spec/spec_helper.rb"
