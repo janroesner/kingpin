@@ -12,11 +12,11 @@ require 'rake'
 require 'jeweler'
 Jeweler::Tasks.new do |gem|
   # gem is a Gem::Specification... see http://docs.rubygems.org/read/chapter/20 for more options
-  gem.name = "pincaster"
-  gem.homepage = "http://railspotting.de"
+  gem.name = "kingpin"
+  gem.homepage = "https://github.com/janroesner/kingpin"
   gem.license = "MIT"
-  gem.summary = %Q{Pincaster is a gem that connects your model with the Pincaster database}
-  gem.description = %Q{Longer description}
+  gem.summary = %Q{Kingpin makes your ActiveRecord model a Pincaster pin and thus geosearcheable. Fast!}
+  gem.description = %Q{Kingpin extends every ActiveRecord model to become a Pincaster pin automatically. Thus the model automatically creates a Pincaster pin everytime it is saved. Kingpin afterwards provides methods at class and instance level that make geolocation easy and thanks to Pincaster amazingly fast.}
   gem.email = "jan@roesner.it"
   gem.authors = ["Jan Roesner"]
   # Include your dependencies below. Runtime dependencies are required when using your gem,
@@ -44,7 +44,7 @@ Rake::RDocTask.new do |rdoc|
   version = File.exist?('VERSION') ? File.read('VERSION') : ""
 
   rdoc.rdoc_dir = 'rdoc'
-  rdoc.title = "pincaster #{version}"
+  rdoc.title = "kingpin #{version}"
   rdoc.rdoc_files.include('README*')
   rdoc.rdoc_files.include('lib/**/*.rb')
 end

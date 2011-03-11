@@ -1,11 +1,11 @@
 ###
-# Pin - makes models pinnable
+# Kingpin - makes models pinnable
 ###
 
-module Pin
+module Kingpin
   class << self.class.superclass
     def pinnable(*args)
-      include PinInstanceMethods
+      include KingpinInstanceMethods
       self.kingpin_args = args
       named_scope :nearby, lambda { |point, radius| { :conditions => ["id in (?)", point.nearby_ids(radius)] } }
       after_save :autopin if !!args.first[:autopin]
@@ -17,9 +17,9 @@ end
 # PinInstanceMethods - provides models new instance methods
 ###
 
-module PinInstanceMethods
+module KingpinInstanceMethods
   def self.included(base)
-    base.extend PinClassMethods
+    base.extend KingpinClassMethods
   end
 
   # add a Pincaster record for self with in layer: self.class
@@ -39,8 +39,7 @@ module PinInstanceMethods
 
   # returns nearby found record_ids in same layer as self, radius meters away, number of results limited to limit
   def nearby_ids(radius, limit=nil)
-    pins = Pincaster.nearby(self, radius, limit)
-    JSON.parse(pins)["matches"].map{|p| p["key"]}
+    JSON.parse(Pincaster.nearby(self, radius, limit))["matches"].map{|p| p["key"]}
   end
 
   # returns nearby found records in same layer as self, radius metera away, number of results limited to limit
@@ -91,7 +90,7 @@ end
 # PinClassMethods - provides models new class methods
 ###
 
-module PinClassMethods
+module KingpinClassMethods
 
   def kingpin_args=(args)
     @@kingpin_args = args
