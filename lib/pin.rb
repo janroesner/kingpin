@@ -8,6 +8,7 @@ module Pin
       include PinInstanceMethods
       self.kingpin_args = args
       named_scope :nearby, lambda { |point, radius| { :conditions => ["id in (?)", point.nearby_ids(radius)] } }
+      after_save :autopin if !!args.first[:autopin]
     end
   end
 end
@@ -77,6 +78,11 @@ module PinInstanceMethods
         return self.send(self.class.kingpin_args[:methods][:lat])
       end
     end
+  end
+
+  # automatically adds a pin for self in case autopin option was set to true for self's AR model
+  def autopin
+    self.add_pin
   end
 
 end
