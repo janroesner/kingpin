@@ -46,7 +46,7 @@ class HttpClient
 
   # redefines the resource path including the namespace
   def resource_path(resource)
-    @namespace.nil? ? resource : "/" + @namespace + resource
+    @namespace.nil? ? resource : @namespace + resource
   end
 
   # rebuild a uri in details, so that another protocol, host, port and GET params can be specified, after Net::HTTP was created

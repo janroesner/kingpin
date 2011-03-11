@@ -2,4 +2,4 @@
 protocol: http
 host: localhost
 port: 4269
-namespace: 'api/1.0'
+namespace: '/api/1.0'
