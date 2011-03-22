@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Jan Roesner"]
-  s.date = %q{2011-03-14}
+  s.date = %q{2011-03-22}
   s.description = %q{Kingpin extends every ActiveRecord model to become a Pincaster pin automatically. Thus the model automatically creates a Pincaster pin everytime it is saved. Kingpin afterwards provides methods at class and instance level that make geolocation easy and thanks to Pincaster amazingly fast.}
   s.email = %q{jan@roesner.it}
   s.extra_rdoc_files = [
