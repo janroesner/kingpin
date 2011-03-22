@@ -67,7 +67,7 @@ class Pincaster
                                "/records/#{record.class.to_s}/#{record.id}.json",
                                nil,
                                nil,
-                               {:_loc => "#{record.pin_lat},#{record.pin_lng}"}).code == "200" ? true : false
+                               {:_loc => "#{record.pin_lat},#{record.pin_lng}"}.merge(record.additional_attributes)).code == "200" ? true : false
   end
 
   # returns a pin object for the given ActiveRecord object
