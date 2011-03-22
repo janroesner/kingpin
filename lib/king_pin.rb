@@ -50,7 +50,7 @@ module KingpinInstanceMethods
   # returns objects longitude depending on configured method name for access as well as DEG or RAD configuration
   def pin_lng
     if not !!self.class.kingpin_args[:methods]
-      [:longitude, :long, :lng, :lgt, :lgdt].each do |l|
+      [:longitude, :long, :lng, :lgt, :lgtd, :lngtd].each do |l|
         if self.respond_to?(l)
           return !!self.class.kingpin_args[:rad] ? self.send(l).to_f * 180 / Math::PI : self.send(l)
         end
@@ -64,7 +64,7 @@ module KingpinInstanceMethods
   # returns objects latitude depending on configured method name for access as well as DEG or RAD configuration
   def pin_lat
     if not !!self.class.kingpin_args[:methods]
-      [:latitude, :lati, :ltt, :ltd, :lat].each do |l|
+      [:latitude, :lati, :ltt, :ltd, :lat, :lttd].each do |l|
         if self.respond_to?(l)
           return !!self.class.kingpin_args[:rad] ? self.send(l).to_f * 180 / Math::PI : self.send(l)
         end
@@ -78,6 +78,28 @@ module KingpinInstanceMethods
   # automatically adds a pin via after_save hook for self in case autopin option was set to true for self's AR model
   def autopin
     self.add_pin
+  end
+
+  # returns additional attributes of self that shall be included into the pin
+  def additional_attributes
+    return {} unless !!self.class.kingpin_args[:include]
+    case self.class.kingpin_args[:include].class.to_s
+    when "Symbol"
+      raise ":all is the only stand alone symbol that is allowed with :include" unless self.class.kingpin_args[:include] == :all
+      self.attributes
+    when "Hash"
+      if self.class.kingpin_args[:include].size > 1 or not [:only, :except].include? self.class.kingpin_args[:include].first.first
+        raise ":include supports :only => [:foo, :bar] and :except => [:scooby, :doo] only"
+      end
+      case self.class.kingpin_args[:include].first.first
+      when :only
+        self.attributes.delete_if{ |name, value| !self.class.kingpin_args[:include].first[1].include?(name.to_sym) }
+      when :except
+        self.attributes.delete_if{ |name, value| self.class.kingpin_args[:include].first[1].include?(name.to_sym) }
+      end
+    else
+      raise ":include needs :all, {:only => [:foo, :bar]} or {:except => [:scooby, :doo]}"
+    end
   end
 
 end
