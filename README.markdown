@@ -59,11 +59,11 @@ Integration
 -----------
 
 Integration into you models is straight forward. Assuming that your model has an attribute_reader or accessor_method like one of the following:
-    [:latitude, :ltt, :ltd, :lat]
+    [:latitude, :lati, :ltt, :ltd, :lat, :lttd]
 
 as well as one of the following for longitude:
 
-    [:longitude, :long, :lng, :lgt, :lgdt]
+    [:longitude, :long, :lng, :lgt, :lgtd, :lngtd]
 
 **and** the values are in *DEG* **not** *RAD*, your way of integration looks like that:
 
@@ -78,7 +78,7 @@ Either way, Kingpin tries to minimize your pain, so some configuration options a
 * `:methods => {:lat => :your_latitude, :lng => :your_longitude}` in case your location accessors have different names
 * `:rad => true` defaults to *false* if not mentioned, and assumes your lat and lng in *RAD* instead of *DEG*
 * `:autopin => true` automatically generates a Pincaster record every time an instance of an enabled model is saved
-* `:include => [unimplemented yet]`
+* `:include => :all | {:only => [:attr_1, :attr_2, ...]} | {:except => [:attr_1, :attr_2, ...]}`
 
 Example: In case your longitude resides at :cool_longitude, your latitude at :cool_latitude, the values are stored in *RAD* and you would like to automatically create Pincaster pins, your classes head should look like this:
 
@@ -86,6 +86,15 @@ Example: In case your longitude resides at :cool_longitude, your latitude at :co
       pinnable :methods => { :lat => :cool_latitude, :lng => :cool_longitude }, :rad => true, :autopin => true
       ...
     end
+
+In case you would like to integrate the instances values for :name and :title only into the pin, your class definition looked like that:
+
+    class FooWithLocation
+      pinnable :include => {:only => [:name, :title]}
+      ...
+    end
+
+Vice versa `:include => {:except => [:name, :title]}` would integrate all attributes but :name and :title, `:include => :all` integrated all available attributes of the instance.
 
 Indexing
 --------
@@ -189,7 +198,6 @@ Coming soon
 Kingpin is missing some functionality yet, but this will arrive soon:
 
 - support for rectangle search
-- support for storage of optional AR attributes of an instance via include
 - distance integration into every returned AR record at retrieval time
 - automated Raketask for index creation
 - tests
