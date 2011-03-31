@@ -42,6 +42,10 @@ module KingpinInstanceMethods
     JSON.parse(Pincaster.nearby(self, radius, limit))["matches"].map{|p| p["key"]}
   end
 
+  def nearby_pins(radius, limit=nil)
+    JSON.parse(Pincaster.nearby(self, radius, limit))["matches"]
+  end
+
   # returns nearby found records in same layer as self, radius metera away, number of results limited to limit
   def nearby(radius, limit=nil)
     self.class.find(nearby_ids(radius, limit))
